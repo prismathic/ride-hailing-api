@@ -6,6 +6,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
+import { DriverModule } from './driver/driver.module';
+import { Driver } from './driver/driver.entity';
 
 @Module({
   imports: [
@@ -19,9 +21,10 @@ import { UsersModule } from './users/users.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User],
+      entities: [User, Driver],
       synchronize: true,
     }),
+    DriverModule,
   ],
   controllers: [AppController],
   providers: [AppService],
