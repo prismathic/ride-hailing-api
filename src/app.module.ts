@@ -4,12 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
 import { DriverModule } from './driver/driver.module';
-import { Driver } from './driver/driver.entity';
 import { PassengerModule } from './passenger/passenger.module';
-import { Passenger } from './passenger/passenger.entity';
+import { RideModule } from './ride/ride.module';
 
 @Module({
   imports: [
@@ -23,11 +21,12 @@ import { Passenger } from './passenger/passenger.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, Driver, Passenger],
+      autoLoadEntities: true,
       synchronize: true,
     }),
     DriverModule,
     PassengerModule,
+    RideModule,
   ],
   controllers: [AppController],
   providers: [AppService],
