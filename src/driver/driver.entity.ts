@@ -1,10 +1,10 @@
+import { Ride } from 'src/ride/ride.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  Index,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('drivers')
@@ -23,4 +23,7 @@ export class Driver {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @OneToMany(() => Ride, (ride) => ride.driver)
+  rides: Ride[];
 }
