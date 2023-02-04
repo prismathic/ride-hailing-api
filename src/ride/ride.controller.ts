@@ -3,12 +3,16 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Inject,
+  InternalServerErrorException,
   Param,
   Post,
 } from '@nestjs/common';
+import { JsonResponse } from 'src/common/helpers/json-response.helper';
 import { DriverService } from 'src/driver/driver.service';
 import { PassengerService } from 'src/passenger/passenger.service';
+import { CannotCreateRideError } from './exceptions/cannot-create-ride.error';
 import { RideStatuses } from './ride.entity';
 import { RideService } from './ride.service';
 
@@ -22,19 +26,31 @@ export class RideController {
 
   @Get('')
   async index() {
-    return await this.rideService.getAll();
+    const rides = await this.rideService.getAll();
+
+    return JsonResponse.create('Rides retrieved successfully.', rides);
   }
 
   @Get('ongoing')
   async getOngoingRides() {
-    return await this.rideService.getAll(RideStatuses.ONGOING);
+    const ongoingRides = await this.rideService.getAll(RideStatuses.ONGOING);
+
+    return JsonResponse.create(
+      'Ongoing rides retrieved successfully.',
+      ongoingRides,
+    );
   }
 
   @Post(':rideId/stop')
+  @HttpCode(204)
   async stop(@Param('rideId') rideId: string) {
-    const ride = await this.rideService.getById(rideId);
+    const stoppedRide = await this.rideService.stop(rideId);
 
-    return await this.rideService.stop(ride);
+    if (!stoppedRide) {
+      throw new BadRequestException('Invalid ride selected.');
+    }
+
+    return JsonResponse.create('Ride stopped successfully.', stoppedRide);
   }
 
   @Post(':passengerId/:driverId')
@@ -51,6 +67,15 @@ export class RideController {
       throw new BadRequestException('Invalid driver provided.');
     }
 
-    return await this.rideService.create(driver, passenger);
+    try {
+      const createdRide = await this.rideService.create(driver, passenger);
+
+      return JsonResponse.create('Ride created successfully.', createdRide);
+    } catch (error) {
+      if (error instanceof CannotCreateRideError) {
+        throw new BadRequestException(error.message);
+      }
+      throw new InternalServerErrorException();
+    }
   }
 }
