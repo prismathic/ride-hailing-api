@@ -11,7 +11,7 @@ import {
 
 export enum RideStatuses {
   ONGOING = 'ongoing',
-  STOPPED = 'stopped',
+  DONE = 'DONE',
 }
 
 @Entity('rides')
