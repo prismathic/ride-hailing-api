@@ -8,12 +8,15 @@ import {
   Param,
   Post,
   Request,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { JsonResponse } from 'src/common/helpers/json-response.helper';
 import { CreateDriverDto } from './create-driver.dto';
 import { DriverService } from './driver.service';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('driver')
 export class DriverController {
   constructor(private driverService: DriverService) {}

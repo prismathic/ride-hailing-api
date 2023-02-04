@@ -5,12 +5,15 @@ import {
   Param,
   Post,
   Request,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { JsonResponse } from 'src/common/helpers/json-response.helper';
 import { CreateDriverDto } from 'src/driver/create-driver.dto';
 import { PassengerService } from './passenger.service';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('passenger')
 export class PassengerController {
   constructor(private passengerService: PassengerService) {}

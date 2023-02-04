@@ -8,7 +8,9 @@ import {
   InternalServerErrorException,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { JsonResponse } from 'src/common/helpers/json-response.helper';
 import { DriverService } from 'src/driver/driver.service';
 import { PassengerService } from 'src/passenger/passenger.service';
@@ -16,6 +18,7 @@ import { CannotCreateRideError } from './exceptions/cannot-create-ride.error';
 import { RideStatuses } from './ride.entity';
 import { RideService } from './ride.service';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('ride')
 export class RideController {
   constructor(
