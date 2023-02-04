@@ -7,6 +7,7 @@ import {
   Request,
   ValidationPipe,
 } from '@nestjs/common';
+import { JsonResponse } from 'src/common/helpers/json-response.helper';
 import { CreateDriverDto } from 'src/driver/create-driver.dto';
 import { PassengerService } from './passenger.service';
 
@@ -16,7 +17,12 @@ export class PassengerController {
 
   @Get('')
   async index() {
-    return await this.passengerService.getAll();
+    const passengers = await this.passengerService.getAll();
+
+    return JsonResponse.create(
+      'Passengers retrieved successfully.',
+      passengers,
+    );
   }
 
   @Post('')
@@ -24,11 +30,15 @@ export class PassengerController {
     @Request() req,
     @Body(new ValidationPipe()) createPassengerDto: CreateDriverDto,
   ) {
-    return await this.passengerService.create(createPassengerDto);
+    const newPassenger = await this.passengerService.create(createPassengerDto);
+
+    return JsonResponse.create('Passenger created successfully.', newPassenger);
   }
 
   @Get(':id')
   async getOne(@Param('id') id: string) {
-    return await this.passengerService.getById(id);
+    const passenger = await this.passengerService.getById(id);
+
+    return JsonResponse.create('Passenger retrieved successfully.', passenger);
   }
 }

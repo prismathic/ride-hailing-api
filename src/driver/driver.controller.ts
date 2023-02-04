@@ -5,12 +5,12 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpStatus,
   Param,
   Post,
   Request,
   ValidationPipe,
 } from '@nestjs/common';
+import { JsonResponse } from 'src/common/helpers/json-response.helper';
 import { CreateDriverDto } from './create-driver.dto';
 import { DriverService } from './driver.service';
 
@@ -20,7 +20,9 @@ export class DriverController {
 
   @Get('')
   async index() {
-    return await this.driverService.getAll();
+    const result = await this.driverService.getAll();
+
+    return JsonResponse.create('Drivers retrieved successfully.', result);
   }
 
   @Post('')
@@ -28,7 +30,9 @@ export class DriverController {
     @Request() req,
     @Body(new ValidationPipe()) createDriverDto: CreateDriverDto,
   ) {
-    return await this.driverService.create(createDriverDto);
+    const newDriver = await this.driverService.create(createDriverDto);
+
+    return JsonResponse.create('Driver created successfully.', newDriver);
   }
 
   @Post(':id/suspend')
@@ -46,7 +50,9 @@ export class DriverController {
       );
     }
 
-    return await this.driverService.suspend(driver.id);
+    await this.driverService.suspend(driver.id);
+
+    return JsonResponse.create('Driver suspended successfully.');
   }
 
   @Delete(':id/suspend')
@@ -64,6 +70,8 @@ export class DriverController {
       );
     }
 
-    return await this.driverService.unsuspend(driver.id);
+    await this.driverService.unsuspend(driver.id);
+
+    return JsonResponse.create('Suspension removed successfully.');
   }
 }
