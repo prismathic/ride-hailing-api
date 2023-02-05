@@ -1,10 +1,12 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Post,
   Request,
   ValidationPipe,
 } from '@nestjs/common';
+import { JsonResponse } from 'src/common/helpers/json-response.helper';
 import { AuthService } from './auth.service';
 import { LoginDto } from './login.dto';
 
@@ -16,6 +18,10 @@ export class AuthController {
   async login(@Request() req, @Body(new ValidationPipe()) loginDto: LoginDto) {
     const user = await this.authService.attempt(loginDto);
 
-    return user;
+    if (!user) {
+      throw new BadRequestException('Invalid credentials.');
+    }
+
+    return JsonResponse.create('User logged in successfully.', user);
   }
 }
