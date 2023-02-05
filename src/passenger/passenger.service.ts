@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateDriverDto } from 'src/driver/create-driver.dto';
 import { Repository } from 'typeorm';
+import { CannotCreatePassengerError } from './errors/cannot-create-passenger.error';
 import { Passenger } from './passenger.entity';
 
 @Injectable()
@@ -19,7 +20,17 @@ export class PassengerService {
     return this.passengerRepository.find();
   }
 
-  create(createPassengerDto: CreateDriverDto) {
-    return this.passengerRepository.insert(createPassengerDto);
+  async create(createPassengerDto: CreateDriverDto) {
+    const passengerExists = await this.passengerRepository.findOne({
+      where: { phoneNumber: createPassengerDto.phoneNumber },
+    });
+
+    if (passengerExists) {
+      throw new CannotCreatePassengerError(
+        'A passenger already exists with the selected phone number.',
+      );
+    }
+
+    return this.passengerRepository.save(createPassengerDto);
   }
 }

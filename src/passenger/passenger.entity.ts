@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  Index,
 } from 'typeorm';
 
 @Entity('passengers')
@@ -16,6 +17,7 @@ export class Passenger {
   @Column()
   name: string;
 
+  @Index({ unique: true })
   @Column()
   phoneNumber: string;
 

@@ -1,7 +1,9 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
+  InternalServerErrorException,
   Param,
   Post,
   Request,
@@ -11,6 +13,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { JsonResponse } from 'src/common/helpers/json-response.helper';
 import { CreateDriverDto } from 'src/driver/create-driver.dto';
+import { CannotCreatePassengerError } from './errors/cannot-create-passenger.error';
 import { PassengerService } from './passenger.service';
 
 @UseGuards(AuthGuard('jwt'))
@@ -33,9 +36,22 @@ export class PassengerController {
     @Request() req,
     @Body(new ValidationPipe()) createPassengerDto: CreateDriverDto,
   ) {
-    const newPassenger = await this.passengerService.create(createPassengerDto);
+    try {
+      const newPassenger = await this.passengerService.create(
+        createPassengerDto,
+      );
 
-    return JsonResponse.create('Passenger created successfully.', newPassenger);
+      return JsonResponse.create(
+        'Passenger created successfully.',
+        newPassenger,
+      );
+    } catch (error) {
+      if (error instanceof CannotCreatePassengerError) {
+        throw new BadRequestException(error.message);
+      }
+
+      throw new InternalServerErrorException();
+    }
   }
 
   @Get(':id')
