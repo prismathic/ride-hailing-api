@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Driver } from 'src/driver/driver.entity';
 import { Passenger } from 'src/passenger/passenger.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CannotCreateRideError } from './exceptions/cannot-create-ride.error';
 import { Ride, RideStatuses } from './ride.entity';
 
@@ -18,12 +18,18 @@ export class RideService {
   }
 
   getAll(status: RideStatuses = null): Promise<Ride[]> {
-    const statusFilter = status ? { where: { status } } : null;
+    const statuses = status
+      ? [status]
+      : [RideStatuses.ONGOING, RideStatuses.DONE];
 
-    return this.rideRepository.find(statusFilter);
+    return this.rideRepository.find({
+      where: {
+        status: In(statuses),
+      },
+    });
   }
 
-  async create(driver: Driver, passenger: Passenger) {
+  async create(driver: Driver, passenger: Passenger): Promise<Ride> {
     if (!driver || !passenger) {
       throw new CannotCreateRideError('Invalid driver/passenger passed.');
     }
@@ -47,11 +53,13 @@ export class RideService {
       );
     }
 
-    return this.rideRepository.insert({
-      driver,
-      passenger,
-      status: RideStatuses.ONGOING,
-    });
+    const newRide = new Ride();
+
+    newRide.driver = driver;
+    newRide.passenger = passenger;
+    newRide.status = RideStatuses.ONGOING;
+
+    return this.rideRepository.save(newRide);
   }
 
   async stop(rideId: string): Promise<Ride> {
