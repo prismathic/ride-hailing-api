@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
@@ -19,7 +19,7 @@ export class AuthService {
 
     const passwordIsValid = await bcrypt.compare(password, user.password);
 
-    if (passwordIsValid) return null;
+    if (!passwordIsValid) return null;
 
     return user;
   }
