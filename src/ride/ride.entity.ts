@@ -11,7 +11,7 @@ import {
 
 export enum RideStatuses {
   ONGOING = 'ongoing',
-  DONE = 'DONE',
+  DONE = 'done',
 }
 
 @Entity('rides')
@@ -28,11 +28,11 @@ export class Ride {
   @Column()
   status: RideStatuses;
 
-  //   @Column('point')
-  //   pickup_point: string;
+  @Column()
+  pickupPoint: string;
 
-  //   @Column('point')
-  //   destination_point: string;
+  @Column()
+  destinationPoint: string;
 
   @CreateDateColumn()
   createdAt: Date;

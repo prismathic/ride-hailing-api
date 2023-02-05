@@ -1,9 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Driver } from 'src/driver/driver.entity';
 import { Passenger } from 'src/passenger/passenger.entity';
 import { In, Repository } from 'typeorm';
+import { CreateRideDto } from './dtos/create-ride.dto';
 import { CannotCreateRideError } from './exceptions/cannot-create-ride.error';
+import { CannotStopRideError } from './exceptions/cannot-stop-ride.error';
 import { Ride, RideStatuses } from './ride.entity';
 
 @Injectable()
@@ -17,7 +19,7 @@ export class RideService {
     return this.rideRepository.findOneBy({ id });
   }
 
-  getAll(status: RideStatuses = null): Promise<Ride[]> {
+  getAll(status?: RideStatuses): Promise<Ride[]> {
     const statuses = status
       ? [status]
       : [RideStatuses.ONGOING, RideStatuses.DONE];
@@ -26,15 +28,23 @@ export class RideService {
       where: {
         status: In(statuses),
       },
+      loadRelationIds: true,
+      order: {
+        createdAt: 'DESC',
+      },
     });
   }
 
-  async create(driver: Driver, passenger: Passenger): Promise<Ride> {
+  async create(
+    driver: Driver,
+    passenger: Passenger,
+    locationPoints: CreateRideDto,
+  ): Promise<Ride> {
     if (!driver || !passenger) {
       throw new CannotCreateRideError('Invalid driver/passenger passed.');
     }
 
-    if (driver.suspendedAt) {
+    if (driver.isSuspended) {
       throw new CannotCreateRideError(
         'Cannot create ride for a suspended driver.',
       );
@@ -53,13 +63,26 @@ export class RideService {
       );
     }
 
+    if (locationPoints.pickupPoint == locationPoints.destinationPoint) {
+      throw new CannotCreateRideError(
+        'The pickup point and destination point cannot be the same.',
+      );
+    }
+
     const newRide = new Ride();
 
     newRide.driver = driver;
     newRide.passenger = passenger;
     newRide.status = RideStatuses.ONGOING;
+    newRide.pickupPoint = locationPoints.pickupPoint;
+    newRide.destinationPoint = locationPoints.destinationPoint;
 
-    return this.rideRepository.save(newRide);
+    const { id } = await this.rideRepository.save(newRide);
+
+    return this.rideRepository.findOne({
+      where: { id },
+      loadRelationIds: true,
+    });
   }
 
   async stop(rideId: string): Promise<Ride> {
@@ -67,8 +90,19 @@ export class RideService {
 
     if (!ride) return null;
 
+    if (ride.status === RideStatuses.DONE) {
+      throw new CannotStopRideError(
+        'The selected ride has already been concluded.',
+      );
+    }
+
     ride.status = RideStatuses.DONE;
 
-    return this.rideRepository.save(ride);
+    const { id } = await this.rideRepository.save(ride);
+
+    return this.rideRepository.findOne({
+      where: { id },
+      loadRelationIds: true,
+    });
   }
 }

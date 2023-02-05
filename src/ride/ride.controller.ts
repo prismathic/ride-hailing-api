@@ -9,12 +9,15 @@ import {
   Param,
   Post,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JsonResponse } from 'src/common/helpers/json-response.helper';
 import { DriverService } from 'src/driver/driver.service';
 import { PassengerService } from 'src/passenger/passenger.service';
+import { CreateRideDto } from './dtos/create-ride.dto';
 import { CannotCreateRideError } from './exceptions/cannot-create-ride.error';
+import { CannotStopRideError } from './exceptions/cannot-stop-ride.error';
 import { RideStatuses } from './ride.entity';
 import { RideService } from './ride.service';
 
@@ -45,19 +48,30 @@ export class RideController {
   }
 
   @Post(':rideId/stop')
-  @HttpCode(204)
+  @HttpCode(200)
   async stop(@Param('rideId') rideId: string) {
-    const stoppedRide = await this.rideService.stop(rideId);
+    try {
+      const stoppedRide = await this.rideService.stop(rideId);
 
-    if (!stoppedRide) {
-      throw new BadRequestException('Invalid ride selected.');
+      if (!stoppedRide) {
+        throw new BadRequestException('Invalid ride selected.');
+      }
+
+      return JsonResponse.create('Ride stopped successfully.', stoppedRide);
+    } catch (error) {
+      if (error instanceof CannotStopRideError) {
+        throw new BadRequestException(error.message);
+      }
+
+      throw new InternalServerErrorException();
     }
-
-    return JsonResponse.create('Ride stopped successfully.', stoppedRide);
   }
 
   @Post(':passengerId/:driverId')
-  async create(@Param() params) {
+  async create(
+    @Param() params,
+    @Body(new ValidationPipe()) createRideDto: CreateRideDto,
+  ) {
     const passenger = await this.passengerService.getById(params.passengerId);
 
     if (!passenger) {
@@ -71,7 +85,11 @@ export class RideController {
     }
 
     try {
-      const createdRide = await this.rideService.create(driver, passenger);
+      const createdRide = await this.rideService.create(
+        driver,
+        passenger,
+        createRideDto,
+      );
 
       return JsonResponse.create('Ride created successfully.', createdRide);
     } catch (error) {
