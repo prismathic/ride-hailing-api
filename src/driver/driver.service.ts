@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDriverDto } from './create-driver.dto';
 import { Driver } from './driver.entity';
+import { CannotCreateDriverError } from './errors/cannot-create-driver.error';
 
 @Injectable()
 export class DriverService {
@@ -18,15 +19,30 @@ export class DriverService {
     return this.driverRepository.find();
   }
 
-  create(createDriverDto: CreateDriverDto) {
-    return this.driverRepository.insert(createDriverDto);
+  async create(createDriverDto: CreateDriverDto) {
+    const driverExists = await this.driverRepository.findOne({
+      where: { phoneNumber: createDriverDto.phoneNumber },
+    });
+
+    if (driverExists) {
+      throw new CannotCreateDriverError(
+        'A driver already exists with the selected phone number.',
+      );
+    }
+    return this.driverRepository.save(createDriverDto);
   }
 
   suspend(id: string) {
-    return this.driverRepository.update(id, { suspendedAt: new Date() });
+    return this.driverRepository.update(id, {
+      isSuspended: true,
+      suspendedAt: new Date(),
+    });
   }
 
   unsuspend(id: string) {
-    return this.driverRepository.update(id, { suspendedAt: null });
+    return this.driverRepository.update(id, {
+      isSuspended: false,
+      suspendedAt: null,
+    });
   }
 }

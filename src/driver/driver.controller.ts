@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  InternalServerErrorException,
   Param,
   Post,
   Request,
@@ -15,6 +16,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { JsonResponse } from 'src/common/helpers/json-response.helper';
 import { CreateDriverDto } from './create-driver.dto';
 import { DriverService } from './driver.service';
+import { CannotCreateDriverError } from './errors/cannot-create-driver.error';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('driver')
@@ -33,9 +35,17 @@ export class DriverController {
     @Request() req,
     @Body(new ValidationPipe()) createDriverDto: CreateDriverDto,
   ) {
-    const newDriver = await this.driverService.create(createDriverDto);
+    try {
+      const newDriver = await this.driverService.create(createDriverDto);
 
-    return JsonResponse.create('Driver created successfully.', newDriver);
+      return JsonResponse.create('Driver created successfully.', newDriver);
+    } catch (error) {
+      if (error instanceof CannotCreateDriverError) {
+        throw new BadRequestException(error.message);
+      }
+
+      throw new InternalServerErrorException();
+    }
   }
 
   @Post(':id/suspend')
@@ -47,7 +57,7 @@ export class DriverController {
       throw new BadRequestException('Driver does not exist');
     }
 
-    if (driver.suspendedAt) {
+    if (driver.isSuspended) {
       throw new BadRequestException(
         'The selected driver has already been suspended.',
       );
@@ -67,7 +77,7 @@ export class DriverController {
       throw new BadRequestException('Driver does not exist');
     }
 
-    if (!driver.suspendedAt) {
+    if (!driver.isSuspended) {
       throw new BadRequestException(
         'The selected driver is not under suspension.',
       );

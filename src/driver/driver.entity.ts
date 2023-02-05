@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   OneToMany,
+  Index,
 } from 'typeorm';
 
 @Entity('drivers')
@@ -15,8 +16,12 @@ export class Driver {
   @Column()
   name: string;
 
+  @Index({ unique: true })
   @Column()
   phoneNumber: string;
+
+  @Column({ default: false })
+  isSuspended: boolean;
 
   @Column({ type: 'datetime', default: null })
   suspendedAt: Date;
