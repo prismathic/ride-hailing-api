@@ -101,13 +101,15 @@ describe('DriverController', () => {
         phoneNumber: '+2347089293456',
       };
 
+      jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+
       expect(await driverController.create(createDriverDto)).toEqual(
         JsonResponse.create('Driver created successfully.', {
           id: 'a uuid',
           ...createDriverDto,
           isSuspended: false,
           suspendedAt: null,
-          createdAt: new Date(),
+          createdAt: new Date('2020-01-01'),
         }),
       );
     });

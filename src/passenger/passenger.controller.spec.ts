@@ -77,11 +77,13 @@ describe('PassengerController', () => {
         phoneNumber: '+2347089293456',
       };
 
+      jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+
       expect(await passengerController.create(createPassengerDto)).toEqual(
         JsonResponse.create('Passenger created successfully.', {
           id: 'a uuid',
           ...createPassengerDto,
-          createdAt: new Date(),
+          createdAt: new Date('2020-01-01'),
         }),
       );
     });
