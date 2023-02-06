@@ -1,6 +1,7 @@
 # Ride Hailing API
 
 ## Introduction
+
 Hi there 👋
 
 This repository contains my submission for an assessment relating to the creation of API endpoints for managing rides (and it's associated entities) for a ride hailing company.
@@ -12,6 +13,7 @@ The project was built using [Nest.js](https://github.com/nestjs/nest), a framewo
 </p>
 
 ## Prerequisites
+
 To aid with a quick setup of this project on your local environment, I have taken the liberty to add a docker configuration to the setup to make things easier (details regarding this are outlined in the later sections of this document)
 
 However, if you decide not to go the Docker route, the following requirements are needed to successfully run the application:
@@ -20,6 +22,7 @@ However, if you decide not to go the Docker route, the following requirements ar
 - Node v16+
 
 ## Description
+
 This project deals with the management of the following entities
 
 - Drivers (creating a driver, suspending a driver etc)
@@ -77,6 +80,13 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+```
+
+## Default User Credentials
+
+```
+Email: ride@gmail.com
+Password: password
 ```
 
 ## Test
