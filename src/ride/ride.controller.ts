@@ -53,10 +53,6 @@ export class RideController {
     try {
       const stoppedRide = await this.rideService.stop(rideId);
 
-      if (!stoppedRide) {
-        throw new BadRequestException('Invalid ride selected.');
-      }
-
       return JsonResponse.create('Ride stopped successfully.', stoppedRide);
     } catch (error) {
       if (error instanceof CannotStopRideError) {

@@ -85,10 +85,12 @@ export class RideService {
     });
   }
 
-  async stop(rideId: string): Promise<Ride> {
+  async stop(rideId: string): Promise<Ride | undefined> {
     const ride = await this.getById(rideId);
 
-    if (!ride) return null;
+    if (!ride) {
+      throw new CannotStopRideError('Invalid ride selected.');
+    }
 
     if (ride.status === RideStatuses.DONE) {
       throw new CannotStopRideError(
