@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Driver } from 'src/driver/driver.entity';
-import { Passenger } from 'src/passenger/passenger.entity';
+import { Driver } from '../driver/driver.entity';
+import { Passenger } from '../passenger/passenger.entity';
 import { In, Repository } from 'typeorm';
 import { CreateRideDto } from './dtos/create-ride.dto';
 import { CannotCreateRideError } from './exceptions/cannot-create-ride.error';

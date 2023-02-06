@@ -1,5 +1,3 @@
-import { Driver } from 'src/driver/driver.entity';
-import { Passenger } from 'src/passenger/passenger.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -8,6 +6,8 @@ import {
   ManyToOne,
   UpdateDateColumn,
 } from 'typeorm';
+import { Driver } from '../driver/driver.entity';
+import { Passenger } from '../passenger/passenger.entity';
 
 export enum RideStatuses {
   ONGOING = 'ongoing',

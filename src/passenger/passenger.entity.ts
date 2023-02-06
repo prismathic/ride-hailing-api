@@ -1,4 +1,4 @@
-import { Ride } from 'src/ride/ride.entity';
+import { Ride } from '../ride/ride.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

@@ -12,9 +12,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { JsonResponse } from 'src/common/helpers/json-response.helper';
-import { DriverService } from 'src/driver/driver.service';
-import { PassengerService } from 'src/passenger/passenger.service';
+import { JsonResponse } from '../common/helpers/json-response.helper';
+import { DriverService } from '../driver/driver.service';
+import { PassengerService } from '../passenger/passenger.service';
 import { CreateRideDto } from './dtos/create-ride.dto';
 import { CannotCreateRideError } from './exceptions/cannot-create-ride.error';
 import { CannotStopRideError } from './exceptions/cannot-stop-ride.error';

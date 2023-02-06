@@ -6,7 +6,7 @@ import {
   Request,
   ValidationPipe,
 } from '@nestjs/common';
-import { JsonResponse } from 'src/common/helpers/json-response.helper';
+import { JsonResponse } from '../common/helpers/json-response.helper';
 import { AuthService } from './auth.service';
 import { LoginDto } from './login.dto';
 

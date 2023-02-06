@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateDriverDto } from 'src/driver/create-driver.dto';
+import { CreateDriverDto } from '../driver/create-driver.dto';
 import { Repository } from 'typeorm';
 import { CannotCreatePassengerError } from './errors/cannot-create-passenger.error';
 import { Passenger } from './passenger.entity';

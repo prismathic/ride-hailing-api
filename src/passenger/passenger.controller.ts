@@ -11,8 +11,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { JsonResponse } from 'src/common/helpers/json-response.helper';
-import { CreateDriverDto } from 'src/driver/create-driver.dto';
+import { JsonResponse } from '../common/helpers/json-response.helper';
+import { CreateDriverDto } from '../driver/create-driver.dto';
 import { CannotCreatePassengerError } from './errors/cannot-create-passenger.error';
 import { PassengerService } from './passenger.service';
 
