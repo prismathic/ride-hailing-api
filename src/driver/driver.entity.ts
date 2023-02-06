@@ -1,4 +1,3 @@
-import { Ride } from 'src/ride/ride.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,6 +6,7 @@ import {
   OneToMany,
   Index,
 } from 'typeorm';
+import { Ride } from '../ride/ride.entity';
 
 @Entity('drivers')
 export class Driver {

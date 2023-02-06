@@ -13,7 +13,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { JsonResponse } from 'src/common/helpers/json-response.helper';
+import { JsonResponse } from '../common/helpers/json-response.helper';
 import { CreateDriverDto } from './create-driver.dto';
 import { DriverService } from './driver.service';
 import { CannotCreateDriverError } from './errors/cannot-create-driver.error';
@@ -31,10 +31,7 @@ export class DriverController {
   }
 
   @Post('')
-  async create(
-    @Request() req,
-    @Body(new ValidationPipe()) createDriverDto: CreateDriverDto,
-  ) {
+  async create(@Body(new ValidationPipe()) createDriverDto: CreateDriverDto) {
     try {
       const newDriver = await this.driverService.create(createDriverDto);
 
@@ -54,7 +51,7 @@ export class DriverController {
     const driver = await this.driverService.getById(id);
 
     if (!driver) {
-      throw new BadRequestException('Driver does not exist');
+      throw new BadRequestException('Driver does not exist.');
     }
 
     if (driver.isSuspended) {
@@ -74,7 +71,7 @@ export class DriverController {
     const driver = await this.driverService.getById(id);
 
     if (!driver) {
-      throw new BadRequestException('Driver does not exist');
+      throw new BadRequestException('Driver does not exist.');
     }
 
     if (!driver.isSuspended) {
