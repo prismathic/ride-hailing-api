@@ -33,7 +33,6 @@ export class PassengerController {
 
   @Post('')
   async create(
-    @Request() req,
     @Body(new ValidationPipe()) createPassengerDto: CreateDriverDto,
   ) {
     try {
