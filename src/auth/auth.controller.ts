@@ -15,7 +15,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Request() req, @Body(new ValidationPipe()) loginDto: LoginDto) {
+  async login(@Body(new ValidationPipe()) loginDto: LoginDto) {
     const user = await this.authService.attempt(loginDto);
 
     if (!user) {
