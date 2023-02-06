@@ -1,38 +1,72 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+# Ride Hailing API
+
+## Introduction
+Hi there 👋
+
+This repository contains my submission for an assessment relating to the creation of API endpoints for managing rides (and it's associated entities) for a ride hailing company.
+
+It features a basic REST API responsible for managing drivers, passengers, rides etc.
+
+<p>
+The project was built using [Nest.js](https://github.com/nestjs/nest), a framework suited for the purpose of building scalable Node.js server side applications.
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Prerequisites
+To aid with a quick setup of this project on your local environment, I have taken the liberty to add a docker configuration to the setup to make things easier (details regarding this are outlined in the later sections of this document)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+However, if you decide not to go the Docker route, the following requirements are needed to successfully run the application:
+
+- NPM (Node Package Manager)
+- Node v16+
 
 ## Description
+This project deals with the management of the following entities
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Drivers (creating a driver, suspending a driver etc)
+- Passengers (creating a passenger, listing all passengers)
+- Rides (creating a ride, concluding/stopping a ride)
 
-## Installation
+The idea behind this project is to build a simple high-level schema that simulates the process of ordering rides and concluding them.
+
+Seeing that this project is API-based, I have taken the liberty to create a Postman documentation outlining all endpoints on the project (alongside relevant examples). View the documentation [here](https://documenter.getpostman.com/view/13400573/2s935pohwv)
+
+## Installation (With Docker)
+
+- Clone the repository:
+
+```
+git clone https://github.com/prismathic/ride-hailing-api.git
+```
+
+- Copy the example env file into your env
+
+```
+cp .env.example .env
+```
+
+- Build the container/image
+
+```
+docker-compose up --build
+```
+
+- You can now access the project on port <b>5010</b> 🎉
+
+## Installation (Without Docker)
+
+- Clone the repository:
+
+```
+git clone https://github.com/prismathic/ride-hailing-api.git
+```
+
+- Install dependencies
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+- Running the app
 
 ```bash
 # development
@@ -58,16 +92,6 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## Links
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- [Postman Documentation](https://documenter.getpostman.com/view/13400573/2s935pohwv)
