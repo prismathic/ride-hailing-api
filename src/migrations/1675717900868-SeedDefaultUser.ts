@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/user.entity';
 
-export class SeedDefaultUser1675373731297 implements MigrationInterface {
+export class SeedDefaultUser1675717900868 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     console.log('it sha reached here.');
     const user = new User();
